@@ -18,28 +18,17 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordController = TextEditingController();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  // Future<bool> signInWithEmailAndPassword() async {
-  //   try {
-  //     debugPrint(_emailController.text);
-  //     debugPrint(_passwordController.text);
-  //     Auth().signInWithEmailAndPassword(
-  //       email: _emailController.text,
-  //       password: _passwordController.text,
-  //     );
-  //     return true;
-  //   } on FirebaseAuthException catch (e) {
-  //     debugPrint(e.toString());
-  //     return false;
-  //   }
-  // }
-
   void signInWithEmailAndPassword() async {
-    _firebaseAuth.signInWithEmailAndPassword(
-        email: _emailController.text, password: _passwordController.text);
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const HoemPage()),
-    );
+    try {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text, password: _passwordController.text);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
+    }
   }
 
   @override

@@ -1,19 +1,28 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:ntu_finance/home_page.dart';
+import 'package:ntu_finance/screens/login_page.dart';
 
-class Auth {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  User? get currentUser => _firebaseAuth.currentUser;
-  Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
+//Credit to the code
+//https://www.youtube.com/watch?v=_3W-JuIVFlg&t=301s&ab_channel=MitchKoko
 
-  Future<void> signInWithEmailAndPassword({
-    required String email,
-    required String password,
-  }) async {
-    await _firebaseAuth.signInWithEmailAndPassword(
-        email: email, password: password);
-  }
+class AuthPage extends StatelessWidget {
+  const AuthPage({super.key});
 
-  Future<void> signOut() async {
-    await _firebaseAuth.signOut();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            //User is logged in
+            if (snapshot.hasData) {
+              return const HoemPage();
+            } else {
+              return const LoginPage();
+            }
+            //User is not logged in
+          }),
+    );
   }
 }
