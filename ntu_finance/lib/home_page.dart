@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ntu_finance/screens/login_page.dart';
 
 import 'authentication.dart';
 
@@ -29,7 +30,12 @@ class _HoemPageState extends State<HoemPage> {
             ElevatedButton(
                 onPressed: () {
                   signOutUser();
-                  Navigator.pop(context);
+                  Navigator.pushAndRemoveUntil(context,
+                      MaterialPageRoute(builder: (BuildContext context) {
+                    return const LoginPage();
+                  }), (r) {
+                    return false;
+                  });
                 },
                 child: const Text("Sign Out"))
           ],
