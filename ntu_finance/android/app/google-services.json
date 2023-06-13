@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1032309640330",
+    "project_id": "ntu-finance",
+    "storage_bucket": "ntu-finance.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1032309640330:android:46f71f3dce9540368bb173",
+        "android_client_info": {
+          "package_name": "com.example.ntu_finance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1032309640330-5h491l47j6ajk01k4hr6007ntj45hq1t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA37McLp-KbWXAN5USTm7Dj-OZYqtsFyh0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1032309640330-5h491l47j6ajk01k4hr6007ntj45hq1t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
