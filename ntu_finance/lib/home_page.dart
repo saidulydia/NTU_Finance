@@ -1,8 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ntu_finance/screens/login_page.dart';
-
-import 'authentication.dart';
 
 class HoemPage extends StatefulWidget {
   const HoemPage({super.key});

@@ -1,8 +1,7 @@
+import 'dart:js_interop';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ntu_finance/home_page.dart';
-
-import '../authentication.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,7 +15,6 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   void signInWithEmailAndPassword() async {
     try {
@@ -24,9 +22,9 @@ class _LoginPageState extends State<LoginPage> {
           email: _emailController.text, password: _passwordController.text);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print('No user found for that email.');
+        debugPrint('No user found for that email.');
       } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
+        debugPrint('Wrong password provided for that user.');
       }
     }
   }
