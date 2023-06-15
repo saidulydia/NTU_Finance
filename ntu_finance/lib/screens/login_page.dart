@@ -1,7 +1,5 @@
-import 'dart:js_interop';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:ntu_finance/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
