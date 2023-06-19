@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:ntu_finance/plus_button.dart';
 import 'package:ntu_finance/screens/login_page.dart';
 import 'package:ntu_finance/top_card.dart';
-import 'package:ntu_finance/transactions.dart';
+import 'package:ntu_finance/widgets/category_cards.dart';
 
 class HoemPage extends StatefulWidget {
-  const HoemPage({super.key});
+  const HoemPage({Key? key}) : super(key: key);
 
   @override
   State<HoemPage> createState() => _HoemPageState();
@@ -17,59 +16,118 @@ class _HoemPageState extends State<HoemPage> {
     await FirebaseAuth.instance.signOut();
   }
 
-  //https://www.youtube.com/watch?v=UeZ1bcEqEQE&t=2s&ab_channel=MitchKoko
+  // https://www.youtube.com/watch?v=UeZ1bcEqEQE&t=2s&ab_channel=MitchKoko
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
-        title: Text('NTU Expense'),
+        title: const Text('NTU Expense'),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.logout_rounded),
+            icon: const Icon(Icons.logout_rounded),
             onPressed: () {
               signOutUser();
-              Navigator.pushAndRemoveUntil(context,
-                  MaterialPageRoute(builder: (BuildContext context) {
-                return const LoginPage();
-              }), (r) {
-                return false;
-              });
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (BuildContext context) {
+                  return const LoginPage();
+                }),
+                (r) => false,
+              );
             },
-          )
+          ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(25.0),
-        child: Column(
-          children: [
-            TopNeuCard(
-              balance: "20,000",
-              income: '200',
-              expense: '30',
-            ),
-            Expanded(
-              child: Container(
-                child: Center(
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 20,
-                      ),
-                      MyTransaction(
-                        transactionName: 'Teaching',
-                        money: '300',
-                        expenseOrIncome: 'income',
-                      ),
-                    ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(25.0),
+          child: Column(
+            children: [
+              const TopNeuCard(
+                balance: "20,000",
+                income: '200',
+                expense: '30',
+              ),
+              const SizedBox(height: 20),
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Category",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-            ),
-            PlusButton(),
-          ],
+              const SizedBox(height: 20),
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CategoryCard(
+                          icon: Icons.trending_up,
+                          text: "Budget Tracking",
+                          color: const Color(0xFF008080),
+                          onTap: () {},
+                        ),
+                      ),
+                      Expanded(
+                        child: CategoryCard(
+                          icon: Icons.attach_money,
+                          text: "Forex",
+                          color: const Color(0xFFDDA0DD),
+                          onTap: () {},
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CategoryCard(
+                          icon: Icons.account_balance_wallet,
+                          text: "Manage Finance",
+                          color: const Color(0xFF4682B4),
+                          onTap: () {},
+                        ),
+                      ),
+                      Expanded(
+                        child: CategoryCard(
+                          icon: Icons.local_offer,
+                          text: "Discounts",
+                          color: const Color(0xFF556B2F),
+                          onTap: () {},
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CategoryCard(
+                          icon: Icons.notification_important,
+                          text: "Payment Reminders",
+                          color: const Color(0xFFFF7F50),
+                          onTap: () {},
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Handle FAB tap here
+        },
+        child: const Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

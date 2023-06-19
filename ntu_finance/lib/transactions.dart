@@ -5,7 +5,8 @@ class MyTransaction extends StatelessWidget {
   final String money;
   final String expenseOrIncome;
 
-  MyTransaction({
+  const MyTransaction({
+    super.key,
     required this.transactionName,
     required this.money,
     required this.expenseOrIncome,
@@ -18,7 +19,7 @@ class MyTransaction extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: Container(
-          padding: EdgeInsets.all(15),
+          padding: const EdgeInsets.all(15),
           color: Colors.grey[100],
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -26,17 +27,17 @@ class MyTransaction extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    padding: EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
                         shape: BoxShape.circle, color: Colors.grey[500]),
-                    child: Center(
+                    child: const Center(
                       child: Icon(
                         Icons.attach_money_outlined,
                         color: Colors.white,
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   Text(transactionName,
@@ -47,7 +48,7 @@ class MyTransaction extends StatelessWidget {
                 ],
               ),
               Text(
-                (expenseOrIncome == 'expense' ? '-' : '+') + '\$' + money,
+                '${expenseOrIncome == 'expense' ? '-' : '+'}\$$money',
                 style: TextStyle(
                   //fontWeight: FontWeight.bold,
                   fontSize: 16,
