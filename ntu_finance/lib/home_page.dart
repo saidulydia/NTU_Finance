@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ntu_finance/screens/login_page.dart';
+import 'package:ntu_finance/screens/savings_pot_page.dart';
 import 'package:ntu_finance/top_card.dart';
 import 'package:ntu_finance/widgets/category_cards.dart';
 
@@ -108,9 +109,23 @@ class _HoemPageState extends State<HoemPage> {
                       Expanded(
                         child: CategoryCard(
                           icon: Icons.notification_important,
-                          text: "Payment Reminders",
+                          text: "Reminders",
                           color: const Color(0xFFFF7F50),
                           onTap: () {},
+                        ),
+                      ),
+                      Expanded(
+                        child: CategoryCard(
+                          icon: Icons.savings,
+                          text: "Pot",
+                          color: const Color(0xFFFF7F50),
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => SavingsPotPage(),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ],
