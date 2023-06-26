@@ -9,43 +9,44 @@ class _SavingsPotPageState extends State<SavingsPotPage> {
   String? potName;
   double? goalAmount;
   String? savingPeriod;
-  DateTime? endDate;
+  double? savingFrequency;
   double? savingAmount;
+  int? frequencySliderValue;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Savings Pot'),
+        title: Text('Create Savings Pot'),
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'Name of the Pot',
                 style: TextStyle(fontSize: 18),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               TextFormField(
                 onChanged: (value) {
                   setState(() {
                     potName = value;
                   });
                 },
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: 'Enter the name of the pot',
                   border: OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 16),
-              const Text(
+              SizedBox(height: 16),
+              Text(
                 'Goal Amount',
                 style: TextStyle(fontSize: 18),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               TextFormField(
                 onChanged: (value) {
                   setState(() {
@@ -53,26 +54,25 @@ class _SavingsPotPageState extends State<SavingsPotPage> {
                   });
                 },
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: 'Enter the goal amount',
                   border: OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 16),
-              const Text(
+              SizedBox(height: 16),
+              Text(
                 'Saving Period',
                 style: TextStyle(fontSize: 18),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               DropdownButtonFormField(
                 value: savingPeriod,
                 onChanged: (value) {
                   setState(() {
                     savingPeriod = value;
-                    _handleSavingPeriodChange(value);
                   });
                 },
-                items: const [
+                items: [
                   DropdownMenuItem(
                     value: 'Weekly',
                     child: Text('Weekly'),
@@ -82,59 +82,54 @@ class _SavingsPotPageState extends State<SavingsPotPage> {
                     child: Text('Monthly'),
                   ),
                 ],
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: 'Select the saving period',
                   border: OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 16),
-              const Text(
-                'End Date',
+              SizedBox(height: 16),
+              Text(
+                'Saving Frequency',
                 style: TextStyle(fontSize: 18),
               ),
-              const SizedBox(height: 8),
-              InkWell(
-                onTap: () {
-                  _selectEndDate(context);
+              SizedBox(height: 8),
+              Slider(
+                value: (frequencySliderValue ?? 0).toDouble(),
+                min: 0,
+                max: 30,
+                divisions: 30,
+                onChanged: (value) {
+                  setState(() {
+                    frequencySliderValue = value.toInt();
+                    savingFrequency = value;
+                  });
                 },
-                child: InputDecorator(
-                  decoration: const InputDecoration(
-                    hintText: 'Select the end date',
-                    border: OutlineInputBorder(),
-                  ),
-                  child: Text(
-                    endDate != null
-                        ? '${endDate!.day}/${endDate!.month}/${endDate!.year}'
-                        : 'Select the end date',
-                    style: const TextStyle(fontSize: 16),
+              ),
+              SizedBox(height: 8),
+              Text(
+                'Selected Saving Frequency: ${frequencySliderValue ?? 0}',
+                style: TextStyle(fontSize: 16),
+              ),
+              SizedBox(height: 16),
+              Card(
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Estimated Saving Amount',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Your estimated saving amount is: ${calculateSavingAmount().toStringAsFixed(2)}',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ],
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text('Create Pot'),
-              ),
-              const SizedBox(height: 16),
-              if (savingAmount != null)
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      children: [
-                        const Text(
-                          'Estimated Saving Amount',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Your estimated saving amount is: ${savingAmount!.toStringAsFixed(2)}',
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
             ],
           ),
         ),
@@ -143,61 +138,14 @@ class _SavingsPotPageState extends State<SavingsPotPage> {
   }
 
   double calculateSavingAmount() {
-    if (goalAmount == null || endDate == null) {
+    if (goalAmount == null || savingFrequency == null) {
       return 0.0;
     }
-
-    final daysRemaining = endDate!.difference(DateTime.now()).inDays;
-    if (daysRemaining <= 0) {
-      return 0.0;
-    }
-
     if (savingPeriod == 'Weekly') {
-      final weeksRemaining = (daysRemaining / 7).ceil();
-      return goalAmount! / weeksRemaining;
+      return goalAmount! / (savingFrequency! * 4.33);
     } else if (savingPeriod == 'Monthly') {
-      final monthsRemaining = (endDate!.year - DateTime.now().year) * 12 +
-          (endDate!.month - DateTime.now().month);
-      return goalAmount! / monthsRemaining;
+      return goalAmount! / savingFrequency!;
     }
-
     return 0.0;
-  }
-
-  void _handleSavingPeriodChange(String? value) {
-    if (value == 'Weekly') {
-      final minimumDate = DateTime.now().add(const Duration(days: 7));
-      if (endDate != null && endDate!.isBefore(minimumDate)) {
-        endDate = minimumDate;
-      }
-    } else if (value == 'Monthly') {
-      final minimumDate = DateTime.now().add(const Duration(days: 30));
-      if (endDate != null && endDate!.isBefore(minimumDate)) {
-        endDate = minimumDate;
-      }
-    }
-  }
-
-  void _selectEndDate(BuildContext context) async {
-    final selectedDate = await showDatePicker(
-      context: context,
-      initialDate: endDate ?? DateTime.now(),
-      firstDate: _getMinimumDate(),
-      lastDate: DateTime(2100),
-    );
-    if (selectedDate != null) {
-      setState(() {
-        endDate = selectedDate;
-      });
-    }
-  }
-
-  DateTime _getMinimumDate() {
-    if (savingPeriod == 'Weekly') {
-      return DateTime.now().add(const Duration(days: 7));
-    } else if (savingPeriod == 'Monthly') {
-      return DateTime.now().add(const Duration(days: 30));
-    }
-    return DateTime.now();
   }
 }
