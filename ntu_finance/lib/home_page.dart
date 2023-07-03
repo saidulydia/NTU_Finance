@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ntu_finance/screens/login_page.dart';
+import 'package:ntu_finance/screens/create_saving_pot_page.dart';
 import 'package:ntu_finance/screens/savings_pot_page.dart';
 import 'package:ntu_finance/top_card.dart';
 import 'package:ntu_finance/widgets/category_cards.dart';

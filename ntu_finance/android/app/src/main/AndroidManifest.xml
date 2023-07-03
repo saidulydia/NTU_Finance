@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Added permission line -->
     <application
         android:label="ntu_finance"
         android:name="${applicationName}"
