@@ -141,7 +141,7 @@ class _CreateSavingsPotPageState extends State<CreateSavingsPotPage> {
         onPressed: () {
           // Handle FAB tap here
           User().setCurrentUserData(
-              potName!, goalAmount!, savingPeriod!, savingFrequency!);
+              potName!, 0, goalAmount!, savingPeriod!, savingFrequency!);
           Fluttertoast.showToast(
             msg: "Pot Created",
             toastLength: Toast.LENGTH_SHORT,

@@ -11,8 +11,8 @@ class User {
     return userId;
   }
 
-  Future<void> setCurrentUserData(String potName, double goalAmount,
-      String savingPeriod, int savingFrequency) async {
+  Future<void> setCurrentUserData(String potName, double currentAmount,
+      double goalAmount, String savingPeriod, int savingFrequency) async {
     try {
       final String userID = await getCurrentUserID();
       final CollectionReference userCollection =
@@ -25,6 +25,7 @@ class User {
           userDocument.collection(potDetailsCollection).doc();
       await potDocument.set({
         'potName': potName,
+        'currentAmount': currentAmount,
         'goalAmount': goalAmount,
         'savingPeriod': savingPeriod,
         'savingFrequency': savingFrequency,

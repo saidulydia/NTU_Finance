@@ -1,12 +1,13 @@
-import 'package:ntu_finance/screens/create_saving_pot_page.dart';
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ntu_finance/firebase/userPots.dart';
-import 'package:flutter/material.dart';
+import 'package:ntu_finance/screens/create_saving_pot_page.dart';
+import 'package:ntu_finance/screens/pot_progress_page.dart';
 
 class PotsListPage extends StatelessWidget {
   final User currentUser = User();
 
-  PotsListPage({super.key});
+  PotsListPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,33 +37,43 @@ class PotsListPage extends StatelessWidget {
                 itemCount: potDocuments.length,
                 itemBuilder: (context, index) {
                   final document = potDocuments[index];
-                  return Card(
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Dismissible(
-                      key: Key(document.id),
-                      background: Container(
-                        color: Colors.red,
-                        alignment: Alignment.centerRight,
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        child: Icon(
-                          Icons.delete,
-                          color: Colors.white,
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              PotProgressPage(document: document),
                         ),
+                      );
+                    },
+                    child: Card(
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      direction: DismissDirection.endToStart,
-                      onDismissed: (direction) async {
-                        final potId = document.id;
-                        await User().deletePotDocument(potId);
-                      },
-                      child: ListTile(
-                        title: Text("Name: " + document['potName']),
-                        subtitle:
-                            Text('Goal Amount: GBP ${document['goalAmount']}'),
-                        leading: Icon(Icons.savings),
-                        trailing: Icon(Icons.arrow_forward),
+                      child: Dismissible(
+                        key: Key(document.id),
+                        background: Container(
+                          color: Colors.red,
+                          alignment: Alignment.centerRight,
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          child: Icon(
+                            Icons.delete,
+                            color: Colors.white,
+                          ),
+                        ),
+                        direction: DismissDirection.endToStart,
+                        onDismissed: (direction) async {
+                          final potId = document.id;
+                          await User().deletePotDocument(potId);
+                        },
+                        child: ListTile(
+                          title: Text("Name: ${document['potName']}"),
+                          subtitle: Text(
+                              'Goal Amount: GBP ${document['goalAmount']}'),
+                          leading: Icon(Icons.savings),
+                          trailing: Icon(Icons.arrow_forward),
+                        ),
                       ),
                     ),
                   );
