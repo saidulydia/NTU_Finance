@@ -15,6 +15,7 @@ class _CreateSavingsPotPageState extends State<CreateSavingsPotPage> {
   int? savingFrequency;
   double? savingAmount;
   int? frequencySliderValue;
+  List<List<dynamic>> empty2DArray = [];
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +76,7 @@ class _CreateSavingsPotPageState extends State<CreateSavingsPotPage> {
                     savingPeriod = value as String?;
                   });
                 },
-                items: [
+                items: const [
                   DropdownMenuItem(
                     value: 'Weekly',
                     child: Text('Weekly'),
@@ -95,7 +96,7 @@ class _CreateSavingsPotPageState extends State<CreateSavingsPotPage> {
                 'Saving Frequency',
                 style: TextStyle(fontSize: 18),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Slider(
                 value: frequencySliderValue?.toDouble() ?? 0,
                 min: 0,
@@ -111,12 +112,12 @@ class _CreateSavingsPotPageState extends State<CreateSavingsPotPage> {
               const SizedBox(height: 8),
               Text(
                 'Selected Saving Frequency: ${frequencySliderValue ?? 0}',
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 16),
               Card(
                 child: Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -141,7 +142,12 @@ class _CreateSavingsPotPageState extends State<CreateSavingsPotPage> {
         onPressed: () {
           // Handle FAB tap here
           User().setCurrentUserData(
-              potName!, 0, goalAmount!, savingPeriod!, savingFrequency!);
+            potName!,
+            0,
+            goalAmount!,
+            savingPeriod!,
+            savingFrequency!,
+          );
           Fluttertoast.showToast(
             msg: "Pot Created",
             toastLength: Toast.LENGTH_SHORT,
@@ -151,7 +157,7 @@ class _CreateSavingsPotPageState extends State<CreateSavingsPotPage> {
           );
           Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(builder: (BuildContext context) {
-            return HoemPage();
+            return const HoemPage();
           }), (r) {
             return false;
           });

@@ -31,7 +31,7 @@ class User {
         'savingFrequency': savingFrequency,
       });
     } catch (e) {
-      print('Error setting current user data: $e');
+      debugPrint('Error setting current user data: $e');
     }
   }
 
@@ -47,7 +47,7 @@ class User {
 
       return potSnapshot.docs.isNotEmpty;
     } catch (e) {
-      print('Error checking pot documents existence: $e');
+      debugPrint('Error checking pot documents existence: $e');
       return false;
     }
   }
@@ -64,7 +64,7 @@ class User {
 
       return potSnapshot.docs;
     } catch (e) {
-      print('Error retrieving pot documents: $e');
+      debugPrint('Error retrieving pot documents: $e');
       return [];
     }
   }
@@ -80,7 +80,7 @@ class User {
           userDocument.collection(potDetailsCollection).doc(potId);
       await potDocument.delete();
     } catch (e) {
-      print('Error deleting pot document: $e');
+      debugPrint('Error deleting pot document: $e');
     }
   }
 }

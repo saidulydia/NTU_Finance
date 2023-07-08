@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:ntu_finance/firebase/potProgress.dart';
 
 class PotProgressPage extends StatefulWidget {
   final DocumentSnapshot<Object?> document;
 
-  PotProgressPage({required this.document});
+  PotProgressPage({super.key, required this.document});
 
   @override
   State<PotProgressPage> createState() => _PotProgressPageState();
@@ -12,6 +13,7 @@ class PotProgressPage extends StatefulWidget {
 
 class _PotProgressPageState extends State<PotProgressPage> {
   double _currentProgress = 0.0;
+  double? _amount; // Variable to store the entered amount
 
   @override
   void initState() {
@@ -28,29 +30,185 @@ class _PotProgressPageState extends State<PotProgressPage> {
     });
   }
 
+  String getCurrentDate() {
+    DateTime currentDate = DateTime.now();
+    int year = currentDate.year;
+    int month = currentDate.month;
+    int day = currentDate.day;
+    String date = "$day/$month/$year";
+    return date;
+  }
+
+  Future<void> _showAmountInputDialog() async {
+    _amount = null; // Reset the amount variable
+
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Enter Amount'),
+          content: TextField(
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              // Update the amount variable as the user types
+              setState(() {
+                _amount = double.tryParse(value);
+              });
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Add'),
+              onPressed: () {
+                // Call the addDatAmountEntry method with the entered amount
+                if (_amount != null) {
+                  PotProgress().addDateAmountEntry(
+                    widget.document['potName'],
+                    getCurrentDate(),
+                    _amount!,
+                  );
+                  Navigator.of(context).pop();
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pot Details'),
+        title: const Text('Pot Details'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              _showAmountInputDialog(); // Show the amount input dialog
+            },
+          ),
+        ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Name: ${widget.document['potName']}"),
-            Text('Goal Amount: GBP ${widget.document['goalAmount']}'),
-            SizedBox(height: 16),
-            LinearProgressIndicator(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Name: ${widget.document['potName']}',
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Goal Amount: GBP ${widget.document['goalAmount']}',
+                  style: const TextStyle(fontSize: 18),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: LinearProgressIndicator(
               value: _currentProgress,
               backgroundColor: Colors.grey[300],
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+              valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
             ),
-            SizedBox(height: 16),
-            Text(
-                'Current Progress: ${(_currentProgress * 100).toStringAsFixed(2)}%'),
-          ],
-        ),
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              'Current Progress: ${(_currentProgress * 100).toStringAsFixed(2)}%',
+              style: const TextStyle(fontSize: 18),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              child: FutureBuilder<List<DocumentSnapshot>>(
+                future: PotProgress().getAllSavingDetials(widget.document.id),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text('Error: ${snapshot.error}'),
+                    );
+                  } else {
+                    final List<DocumentSnapshot<Object?>> potDocuments =
+                        snapshot.data!;
+                    if (potDocuments.isEmpty) {
+                      return const Center(
+                        child: Text('Start Saving!'),
+                      );
+                    } else {
+                      return ListView.builder(
+                        itemCount: potDocuments.length,
+                        itemBuilder: (context, index) {
+                          final document = potDocuments[index];
+                          return Card(
+                            color: Colors.white,
+                            elevation: 4,
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: ListTile(
+                              title: Text(
+                                "Amount: GBP ${document['amount']}",
+                                style: const TextStyle(fontSize: 18),
+                              ),
+                              subtitle: Text(
+                                'Date: ${document['date']}',
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                              leading: const Icon(
+                                Icons.money,
+                                size: 32,
+                                color: Colors.blue,
+                              ),
+                              trailing: const Icon(
+                                Icons.arrow_upward,
+                                size: 32,
+                                color: Colors.green,
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  }
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
