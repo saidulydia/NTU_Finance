@@ -43,6 +43,7 @@ class PotProgress {
     String potName,
     String currentDate,
     double amount,
+    bool isAdding,
   ) async {
     try {
       final String userID = await getCurrentUserID();
@@ -69,6 +70,7 @@ class PotProgress {
         await dateAmountCollectionRef.add({
           'date': currentDate,
           'amount': amount,
+          'isAdding': isAdding,
         });
 
         // Update the current amount in the pot document
@@ -100,6 +102,52 @@ class PotProgress {
     } catch (e) {
       debugPrint('Error retrieving pot documents: $e');
       return [];
+    }
+  }
+
+  void removeDateAmountEntry(
+    String potName,
+    String currentDate,
+    double amount,
+    bool isAdding,
+  ) async {
+    try {
+      final String userID = await getCurrentUserID();
+      final CollectionReference userCollection =
+          FirebaseFirestore.instance.collection('users');
+
+      final DocumentReference userDocument = userCollection.doc(userID);
+
+      final QuerySnapshot potQuerySnapshot = await userDocument
+          .collection(potDetailsCollection)
+          .where('potName', isEqualTo: potName)
+          .limit(1)
+          .get();
+
+      if (potQuerySnapshot.docs.isNotEmpty) {
+        final DocumentSnapshot potDocumentSnapshot = potQuerySnapshot.docs[0];
+        final DocumentReference potDocument = potDocumentSnapshot.reference;
+
+        // Create a new sub-collection for date and amount entries
+        final CollectionReference dateAmountCollectionRef =
+            potDocument.collection('dateAmountEntries');
+
+        // Add a new document to the date and amount entries sub-collection
+        await dateAmountCollectionRef.add({
+          'date': currentDate,
+          'amount': amount,
+          'isAdding': isAdding,
+        });
+
+        // Update the current amount in the pot document
+        final Map<String, dynamic> potData =
+            potDocumentSnapshot.data() as Map<String, dynamic>;
+        final double currentAmount = potData['currentAmount'] as double;
+        final double updatedAmount = currentAmount - amount;
+        await potDocument.update({'currentAmount': updatedAmount});
+      }
+    } catch (e) {
+      debugPrint('Error adding date and amount entry: $e');
     }
   }
 }

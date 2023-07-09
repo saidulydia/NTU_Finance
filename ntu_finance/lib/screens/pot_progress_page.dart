@@ -45,15 +45,52 @@ class _PotProgressPageState extends State<PotProgressPage> {
     await showDialog(
       context: context,
       builder: (BuildContext context) {
+        // Declare a variable to store the selected action (add or remove)
+        String selectedAction = 'add';
+
         return AlertDialog(
           title: const Text('Enter Amount'),
-          content: TextField(
-            keyboardType: TextInputType.number,
-            onChanged: (value) {
-              // Update the amount variable as the user types
-              setState(() {
-                _amount = double.tryParse(value);
-              });
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Text field for entering the amount
+                  TextField(
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      setState(() {
+                        _amount = double.tryParse(value);
+                      });
+                    },
+                  ),
+                  // Radio buttons for selecting add or remove action
+                  ListTile(
+                    title: const Text('Add'),
+                    leading: Radio(
+                      value: 'add',
+                      groupValue: selectedAction,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedAction = value as String;
+                        });
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: const Text('Remove'),
+                    leading: Radio(
+                      value: 'remove',
+                      groupValue: selectedAction,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedAction = value as String;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              );
             },
           ),
           actions: <Widget>[
@@ -64,15 +101,25 @@ class _PotProgressPageState extends State<PotProgressPage> {
               },
             ),
             ElevatedButton(
-              child: const Text('Add'),
+              child: const Text('Submit'),
               onPressed: () {
-                // Call the addDatAmountEntry method with the entered amount
+                // Call the appropriate method based on the selected action
                 if (_amount != null) {
-                  PotProgress().addDateAmountEntry(
-                    widget.document['potName'],
-                    getCurrentDate(),
-                    _amount!,
-                  );
+                  if (selectedAction == 'add') {
+                    PotProgress().addDateAmountEntry(
+                      widget.document['potName'],
+                      getCurrentDate(),
+                      _amount!,
+                      true,
+                    );
+                  } else if (selectedAction == 'remove') {
+                    PotProgress().removeDateAmountEntry(
+                      widget.document['potName'],
+                      getCurrentDate(),
+                      _amount!,
+                      false,
+                    );
+                  }
                   Navigator.of(context).pop();
                 }
               },
@@ -193,10 +240,14 @@ class _PotProgressPageState extends State<PotProgressPage> {
                                 size: 32,
                                 color: Colors.blue,
                               ),
-                              trailing: const Icon(
-                                Icons.arrow_upward,
+                              trailing: Icon(
+                                document['isAdding']
+                                    ? Icons.arrow_upward
+                                    : Icons.remove,
                                 size: 32,
-                                color: Colors.green,
+                                color: document['isAdding']
+                                    ? Colors.green
+                                    : Colors.red,
                               ),
                             ),
                           );
