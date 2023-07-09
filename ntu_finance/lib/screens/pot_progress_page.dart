@@ -193,8 +193,9 @@ class _PotProgressPageState extends State<PotProgressPage> {
                   topRight: Radius.circular(20),
                 ),
               ),
-              child: FutureBuilder<List<DocumentSnapshot>>(
-                future: PotProgress().getAllSavingDetials(widget.document.id),
+              child: StreamBuilder<QuerySnapshot>(
+                stream:
+                    PotProgress().getSavingDetailsStream(widget.document.id),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
@@ -205,8 +206,8 @@ class _PotProgressPageState extends State<PotProgressPage> {
                       child: Text('Error: ${snapshot.error}'),
                     );
                   } else {
-                    final List<DocumentSnapshot<Object?>> potDocuments =
-                        snapshot.data!;
+                    final List<DocumentSnapshot> potDocuments =
+                        snapshot.data!.docs;
                     if (potDocuments.isEmpty) {
                       return const Center(
                         child: Text('Start Saving!'),

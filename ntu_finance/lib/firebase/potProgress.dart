@@ -150,4 +150,32 @@ class PotProgress {
       debugPrint('Error adding date and amount entry: $e');
     }
   }
+
+  Stream<QuerySnapshot> getSavingDetailsStream(String potId) {
+    //     try {
+    //   final String userID = await getCurrentUserID();
+    //   final CollectionReference userCollection =
+    //       FirebaseFirestore.instance.collection('users');
+    //   final DocumentReference userDocument = userCollection.doc(userID);
+
+    //   final QuerySnapshot potSnapshot = await userDocument
+    //       .collection(potDetailsCollection)
+    //       .doc(potId)
+    //       .collection("dateAmountEntries")
+    //       .get();
+
+    //   return potSnapshot.docs;
+    // } catch (e) {
+    //   debugPrint('Error retrieving pot documents: $e');
+    //   return [];
+    // }
+
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc("Wnt2zNGXnLVq3CnSXYE1QnWdYog2")
+        .collection(potDetailsCollection)
+        .doc(potId)
+        .collection("dateAmountEntries")
+        .snapshots();
+  }
 }
