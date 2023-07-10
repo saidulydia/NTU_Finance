@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ntu_finance/local_storage/local_storage.dart';
 import 'package:ntu_finance/screens/forex_page.dart';
 import 'package:ntu_finance/screens/login_page.dart';
-import 'package:ntu_finance/screens/create_saving_pot_page.dart';
 import 'package:ntu_finance/screens/savings_pot_page.dart';
 import 'package:ntu_finance/top_card.dart';
 import 'package:ntu_finance/widgets/category_cards.dart';
@@ -86,7 +85,7 @@ class _HoemPageState extends State<HoemPage> {
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => ForexPage(),
+                                builder: (context) => CurrencyConverterPage(),
                               ),
                             );
                           },

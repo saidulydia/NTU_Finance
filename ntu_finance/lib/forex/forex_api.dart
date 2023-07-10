@@ -3,13 +3,12 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ForexApi {
-  static Future<Map<String, dynamic>> fetchForexDetails() async {
+  Future<Map<String, dynamic>> fetchForexDetails(
+      String fromSymbol, String toSymbol) async {
     String apiKey = 'AJYN287HEEKWIOHN';
-    String fromCurrency = 'EUR';
-    String toCurrency = 'USD';
 
     String url =
-        'https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=$fromCurrency&to_currency=$toCurrency&apikey=$apiKey';
+        'https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=$fromSymbol&to_currency=$toSymbol&apikey=$apiKey';
 
     try {
       http.Response response = await http.get(Uri.parse(url));
@@ -18,8 +17,8 @@ class ForexApi {
         Map<String, dynamic> data = json.decode(response.body);
         Map<String, dynamic> exchangeRate =
             data['Realtime Currency Exchange Rate'] as Map<String, dynamic>;
-        debugPrint('Exchange Rate: ${exchangeRate['5. Exchange Rate']}');
-        debugPrint(data.toString());
+        // debugPrint('Exchange Rate: ${exchangeRate['5. Exchange Rate']}');
+        // debugPrint(data.toString());
         return exchangeRate;
       } else {
         debugPrint('Request failed with status: ${response.statusCode}');
@@ -28,6 +27,6 @@ class ForexApi {
       debugPrint('Error fetching Forex details: $e');
     }
 
-    return {};
+    return {}; // Return an empty map in case of an error
   }
 }
