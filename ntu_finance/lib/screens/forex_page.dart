@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ntu_finance/forex/forex_api.dart';
+import 'package:ntu_finance/widgets/currency_card.dart';
 
 class CurrencyConverterPage extends StatefulWidget {
   @override
@@ -15,11 +16,18 @@ class _CurrencyConverterPageState extends State<CurrencyConverterPage> {
   final TextEditingController fromCurrencyController = TextEditingController();
   final TextEditingController toCurrencyController = TextEditingController();
 
+  Map<String, double> exchangeRates = {};
+
+  Future<void> fetchExchangeRates() async {
+    exchangeRates =
+        await ForexApi().fetchAllExchangeRates(fromCurrency, currencies);
+    setState(() {});
+  }
+
   Future<void> performConversion(String fromCurrency, String toCurrency) async {
     Map<String, dynamic> exchangeRateMap =
-        (await ForexApi().fetchForexDetails(fromCurrency, toCurrency));
+        await ForexApi().fetchForexDetails(fromCurrency, toCurrency);
     String exchangeRate = exchangeRateMap["5. Exchange Rate"];
-    // debugPrint("----->>>>" + exchangeRate);
 
     double result =
         double.parse(fromCurrencyController.text) * double.parse(exchangeRate);
@@ -27,6 +35,12 @@ class _CurrencyConverterPageState extends State<CurrencyConverterPage> {
     setState(() {
       toCurrencyController.text = result.toStringAsFixed(2);
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchExchangeRates();
   }
 
   @override
@@ -106,6 +120,32 @@ class _CurrencyConverterPageState extends State<CurrencyConverterPage> {
                 performConversion(fromCurrency, toCurrency);
               },
               child: const Text('Convert'),
+            ),
+            const SizedBox(height: 20.0),
+            const Center(
+              child: Text(
+                'Exchange Rates:',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: exchangeRates.length,
+                itemBuilder: (BuildContext context, int index) {
+                  String currency = exchangeRates.keys.elementAt(index);
+                  double rate = exchangeRates[currency]!;
+
+                  return ListTile(
+                    title: CurrencyCard(
+                      currency: currency,
+                      rate: rate,
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),

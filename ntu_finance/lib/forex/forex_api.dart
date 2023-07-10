@@ -29,4 +29,19 @@ class ForexApi {
 
     return {}; // Return an empty map in case of an error
   }
+
+  Future<Map<String, double>> fetchAllExchangeRates(
+      String baseCurrency, List<String> targetCurrencies) async {
+    Map<String, double> exchangeRates = {};
+
+    for (String currency in targetCurrencies) {
+      Map<String, dynamic> forexDetails =
+          await fetchForexDetails(baseCurrency, currency);
+
+      double rate = double.parse(forexDetails['5. Exchange Rate'] as String);
+      exchangeRates[currency] = rate;
+    }
+
+    return exchangeRates;
+  }
 }
