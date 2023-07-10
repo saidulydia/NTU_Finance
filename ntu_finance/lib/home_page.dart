@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ntu_finance/local_storage/local_storage.dart';
+import 'package:ntu_finance/screens/forex_page.dart';
 import 'package:ntu_finance/screens/login_page.dart';
 import 'package:ntu_finance/screens/create_saving_pot_page.dart';
 import 'package:ntu_finance/screens/savings_pot_page.dart';
@@ -82,7 +83,13 @@ class _HoemPageState extends State<HoemPage> {
                           icon: Icons.attach_money,
                           text: "Forex",
                           color: const Color(0xFFDDA0DD),
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => ForexPage(),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ],

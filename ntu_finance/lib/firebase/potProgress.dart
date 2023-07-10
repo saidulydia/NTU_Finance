@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ntu_finance/local_storage/local_storage.dart';
 
@@ -32,7 +31,7 @@ class PotProgress {
       debugPrint('Error retrieving current amount: $e');
     }
 
-    return 0.0; // Return a default value if no amount is found or if there was an error
+    return 0.0;
   }
 
   Future<void> addDateAmountEntry(

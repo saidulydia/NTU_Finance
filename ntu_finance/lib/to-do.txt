@@ -2,3 +2,5 @@
 
 
 Pot details does not update progress when a new amount is added/removed 
+
+AlphaVantage API Key - AJYN287HEEKWIOHN
