@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ntu_finance/local_storage/local_storage.dart';
 import 'package:ntu_finance/screens/login_page.dart';
 import 'package:ntu_finance/screens/create_saving_pot_page.dart';
 import 'package:ntu_finance/screens/savings_pot_page.dart';
@@ -30,6 +31,7 @@ class _HoemPageState extends State<HoemPage> {
             icon: const Icon(Icons.logout_rounded),
             onPressed: () {
               signOutUser();
+              LocalStorageManager().deleteUserId();
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (BuildContext context) {

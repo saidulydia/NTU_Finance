@@ -1,6 +1,6 @@
+import 'package:ntu_finance/firebase/potProgress.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:ntu_finance/firebase/potProgress.dart';
 
 class PotProgressPage extends StatefulWidget {
   final DocumentSnapshot<Object?> document;
@@ -21,7 +21,7 @@ class _PotProgressPageState extends State<PotProgressPage> {
     _updateProgress();
   }
 
-  void _updateProgress() {
+  void _updateProgress() async {
     // Calculate the progress based on the current amount and goal amount
     double currentAmount = widget.document['currentAmount'].toDouble();
     double goalAmount = widget.document['goalAmount'].toDouble();
@@ -139,7 +139,7 @@ class _PotProgressPageState extends State<PotProgressPage> {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              _showAmountInputDialog(); // Show the amount input dialog
+              _showAmountInputDialog();
             },
           ),
         ],

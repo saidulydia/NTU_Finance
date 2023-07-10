@@ -1,19 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ntu_finance/local_storage/local_storage.dart';
 
 class PotProgress {
   final String potDetailsCollection = 'potDetails';
 
-  Future<String> getCurrentUserID() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    String userId = auth.currentUser!.uid;
-    return userId;
-  }
+  String? userID = LocalStorageManager().getUserId();
 
   Future<double> getCurrentAmount(String potName) async {
     try {
-      final String userID = await getCurrentUserID();
       final CollectionReference userCollection =
           FirebaseFirestore.instance.collection('users');
 
@@ -46,7 +42,6 @@ class PotProgress {
     bool isAdding,
   ) async {
     try {
-      final String userID = await getCurrentUserID();
       final CollectionReference userCollection =
           FirebaseFirestore.instance.collection('users');
 
@@ -87,7 +82,6 @@ class PotProgress {
 
   Future<List<DocumentSnapshot>> getAllSavingDetials(String docID) async {
     try {
-      final String userID = await getCurrentUserID();
       final CollectionReference userCollection =
           FirebaseFirestore.instance.collection('users');
       final DocumentReference userDocument = userCollection.doc(userID);
@@ -105,6 +99,41 @@ class PotProgress {
     }
   }
 
+  Future<List<Map<String, dynamic>>> getCurrentPotDetails(String docID) async {
+    try {
+      final CollectionReference userCollection =
+          FirebaseFirestore.instance.collection('users');
+      final DocumentReference userDocument = userCollection.doc(userID);
+
+      final QuerySnapshot potSnapshot =
+          await userDocument.collection(potDetailsCollection).get();
+
+      List<Map<String, dynamic>> potDetailsList = [];
+
+      for (DocumentSnapshot document in potSnapshot.docs) {
+        if (document.id == docID) {
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+          int goalAmount = data['goalAmount'] as int;
+          int currentAmount = data['currentAmount'] as int;
+
+          Map<String, dynamic> potDetails = {
+            'docID': document.id,
+            'goalAmount': goalAmount,
+            'currentAmount': currentAmount,
+          };
+
+          potDetailsList.add(potDetails);
+        }
+      }
+
+      return potDetailsList;
+    } catch (e) {
+      debugPrint('Error retrieving pot documents: $e');
+      return [];
+    }
+  }
+
+  //This method is for when the user is removing an amount from the storage
   void removeDateAmountEntry(
     String potName,
     String currentDate,
@@ -112,7 +141,6 @@ class PotProgress {
     bool isAdding,
   ) async {
     try {
-      final String userID = await getCurrentUserID();
       final CollectionReference userCollection =
           FirebaseFirestore.instance.collection('users');
 
@@ -152,27 +180,9 @@ class PotProgress {
   }
 
   Stream<QuerySnapshot> getSavingDetailsStream(String potId) {
-    //     try {
-    //   final String userID = await getCurrentUserID();
-    //   final CollectionReference userCollection =
-    //       FirebaseFirestore.instance.collection('users');
-    //   final DocumentReference userDocument = userCollection.doc(userID);
-
-    //   final QuerySnapshot potSnapshot = await userDocument
-    //       .collection(potDetailsCollection)
-    //       .doc(potId)
-    //       .collection("dateAmountEntries")
-    //       .get();
-
-    //   return potSnapshot.docs;
-    // } catch (e) {
-    //   debugPrint('Error retrieving pot documents: $e');
-    //   return [];
-    // }
-
     return FirebaseFirestore.instance
-        .collection('users')
-        .doc("Wnt2zNGXnLVq3CnSXYE1QnWdYog2")
+        .collection("users")
+        .doc(userID)
         .collection(potDetailsCollection)
         .doc(potId)
         .collection("dateAmountEntries")

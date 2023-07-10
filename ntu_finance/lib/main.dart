@@ -1,9 +1,16 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:ntu_finance/authentication.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Initialize Hive
+  await Hive.initFlutter();
+
+  // Open the Hive box (storage) where you want to store the user ID
+  await Hive.openBox('userBox');
   await Firebase.initializeApp();
   runApp(const MyApp());
 }

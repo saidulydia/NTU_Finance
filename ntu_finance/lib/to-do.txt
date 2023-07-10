@@ -1,0 +1,4 @@
+
+
+
+Pot details does not update progress when a new amount is added/removed 
