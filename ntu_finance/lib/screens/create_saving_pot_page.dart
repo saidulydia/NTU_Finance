@@ -157,7 +157,7 @@ class _CreateSavingsPotPageState extends State<CreateSavingsPotPage> {
           );
           Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(builder: (BuildContext context) {
-            return const HoemPage();
+            return const HomePage();
           }), (r) {
             return false;
           });

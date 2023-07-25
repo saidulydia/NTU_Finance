@@ -27,6 +27,7 @@ class UserCurrentAccount {
     }
   }
 
+// Method to add the new amount and transaction details
   Future<void> addToCurrentUserAmount(double amount, String dateString) async {
     try {
       // Get the current user's ID
@@ -36,13 +37,12 @@ class UserCurrentAccount {
       CollectionReference accountBalanceCollection =
           usersCollection.doc(currentUserId).collection('accountBalance');
 
-      // Get the reference to the accountTransactions subcollection for the current user
-      CollectionReference accountTransactionsCollection =
-          usersCollection.doc(currentUserId).collection('accountTransactions');
+      // Use a fixed document ID to represent the user's account balance
+      String accountBalanceDocumentId = 'userAccountBalance';
 
       // Fetch the current data from the accountBalance subcollection
       DocumentSnapshot accountBalanceSnapshot =
-          await accountBalanceCollection.doc().get();
+          await accountBalanceCollection.doc(accountBalanceDocumentId).get();
 
       // Get the current amount from the snapshot data
       Map<String, dynamic>? accountBalanceData =
@@ -53,12 +53,14 @@ class UserCurrentAccount {
       double updatedAmount = currentAmount + amount;
 
       // Update the amount and date in the accountBalance subcollection
-      await accountBalanceCollection.add({
+      await accountBalanceCollection.doc(accountBalanceDocumentId).set({
         'currentAmount': updatedAmount,
         'dateString': dateString,
-      });
+      }, SetOptions(merge: true));
 
       // Update the transaction details in the accountTransactions subcollection
+      CollectionReference accountTransactionsCollection =
+          usersCollection.doc(currentUserId).collection('accountTransactions');
       await accountTransactionsCollection.add({
         'amount': amount,
         'dateString': dateString,
@@ -70,6 +72,7 @@ class UserCurrentAccount {
     }
   }
 
+// Method to add the new amount and transaction details
   Future<void> removeFromCurrentUserAmount(
       double amount, String dateString) async {
     try {
@@ -80,13 +83,12 @@ class UserCurrentAccount {
       CollectionReference accountBalanceCollection =
           usersCollection.doc(currentUserId).collection('accountBalance');
 
-      // Get the reference to the accountTransactions subcollection for the current user
-      CollectionReference accountTransactionsCollection =
-          usersCollection.doc(currentUserId).collection('accountTransactions');
+      // Use a fixed document ID to represent the user's account balance
+      String accountBalanceDocumentId = 'userAccountBalance';
 
       // Fetch the current data from the accountBalance subcollection
       DocumentSnapshot accountBalanceSnapshot =
-          await accountBalanceCollection.doc().get();
+          await accountBalanceCollection.doc(accountBalanceDocumentId).get();
 
       // Get the current amount from the snapshot data
       Map<String, dynamic>? accountBalanceData =
@@ -97,16 +99,18 @@ class UserCurrentAccount {
       double updatedAmount = currentAmount - amount;
 
       // Update the amount and date in the accountBalance subcollection
-      await accountBalanceCollection.add({
+      await accountBalanceCollection.doc(accountBalanceDocumentId).set({
         'currentAmount': updatedAmount,
         'dateString': dateString,
-      });
+      }, SetOptions(merge: false));
 
       // Update the transaction details in the accountTransactions subcollection
+      CollectionReference accountTransactionsCollection =
+          usersCollection.doc(currentUserId).collection('accountTransactions');
       await accountTransactionsCollection.add({
         'amount': amount,
         'dateString': dateString,
-        'isAdding': false,
+        'isAdding': true,
       });
     } catch (e) {
       // Handle errors here if necessary

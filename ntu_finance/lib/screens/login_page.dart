@@ -17,7 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   void navigateToPage() {
     Navigator.pushAndRemoveUntil(context,
         MaterialPageRoute(builder: (BuildContext context) {
-      return const HoemPage();
+      return const HomePage();
     }), (r) {
       return false;
     });
