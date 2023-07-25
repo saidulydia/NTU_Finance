@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:ntu_finance/local_storage/local_storage.dart';
-import 'package:ntu_finance/screens/forex_page.dart';
-import 'package:ntu_finance/screens/login_page.dart';
-import 'package:ntu_finance/screens/savings_pot_page.dart';
+import 'package:ntu_finance/screens/edit_current_balance_page.dart';
 import 'package:ntu_finance/top_card.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ntu_finance/screens/login_page.dart';
+import 'package:ntu_finance/screens/forex_page.dart';
 import 'package:ntu_finance/widgets/category_cards.dart';
+import 'package:ntu_finance/screens/savings_pot_page.dart';
+import 'package:ntu_finance/local_storage/local_storage.dart';
 
 class HoemPage extends StatefulWidget {
   const HoemPage({Key? key}) : super(key: key);
@@ -48,10 +49,18 @@ class _HoemPageState extends State<HoemPage> {
           padding: const EdgeInsets.all(25.0),
           child: Column(
             children: [
-              const TopNeuCard(
-                balance: "20,000",
+              TopNeuCard(
+                balance: "80,000",
                 income: '200',
                 expense: '30',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const EditCurrentAmountPage(),
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 20),
               const Align(
