@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:ntu_finance/screens/edit_current_balance_page.dart';
+import 'package:ntu_finance/screens/user_profile_page.dart';
 import 'package:ntu_finance/top_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:ntu_finance/screens/login_page.dart';
 import 'package:ntu_finance/screens/forex_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ntu_finance/widgets/category_cards.dart';
 import 'package:ntu_finance/screens/savings_pot_page.dart';
-import 'package:ntu_finance/local_storage/local_storage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ntu_finance/screens/edit_current_balance_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -17,10 +16,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  void signOutUser() async {
-    await FirebaseAuth.instance.signOut();
-  }
-
   String _getCurrentBalanceFromSnapshot(DocumentSnapshot snapshot) {
     Map<String, dynamic>? balanceData =
         snapshot.data() as Map<String, dynamic>?;
@@ -59,16 +54,13 @@ class _HomePageState extends State<HomePage> {
             title: Text('NTU Expense'),
             actions: <Widget>[
               IconButton(
-                icon: const Icon(Icons.logout_rounded),
+                icon: const Icon(Icons.person_2_rounded),
                 onPressed: () {
-                  signOutUser();
-                  LocalStorageManager().deleteUserId();
-                  Navigator.pushAndRemoveUntil(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(builder: (BuildContext context) {
-                      return const LoginPage();
+                      return UserProfilePage();
                     }),
-                    (r) => false,
                   );
                 },
               ),
