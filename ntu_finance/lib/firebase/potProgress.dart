@@ -132,7 +132,6 @@ class PotProgress {
     }
   }
 
-  //This method is for when the user is removing an amount from the storage
   void removeDateAmountEntry(
     String potName,
     String currentDate,

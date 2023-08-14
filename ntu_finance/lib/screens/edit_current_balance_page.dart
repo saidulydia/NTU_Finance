@@ -11,11 +11,23 @@ class EditCurrentAmountPage extends StatefulWidget {
   State<EditCurrentAmountPage> createState() => _EditCurrentAmountPageState();
 }
 
+enum BudgetCategory {
+  income,
+  entertainment,
+  shopping,
+  food,
+  utilities,
+  others,
+}
+
 class _EditCurrentAmountPageState extends State<EditCurrentAmountPage> {
   double? _amount; // Variable to store the entered amount
 
   Future<void> _showAmountInputDialog() async {
     _amount = null; // Reset the amount variable
+
+    BudgetCategory? selectedCategory =
+        BudgetCategory.entertainment; // Default selected category
 
     await showDialog(
       context: context,
@@ -38,6 +50,29 @@ class _EditCurrentAmountPageState extends State<EditCurrentAmountPage> {
                         _amount = double.tryParse(value);
                       });
                     },
+                  ),
+                  // Dropdown to select budget category
+                  DropdownButton<BudgetCategory>(
+                    value: selectedCategory,
+                    onChanged: (BudgetCategory? newValue) {
+                      if (newValue != null) {
+                        setState(() {
+                          selectedCategory = newValue;
+                        });
+                      }
+                    },
+                    items: BudgetCategory.values
+                        .map<DropdownMenuItem<BudgetCategory>>(
+                      (BudgetCategory category) {
+                        return DropdownMenuItem<BudgetCategory>(
+                          value: category,
+                          child: Text(category
+                              .toString()
+                              .split('.')
+                              .last), // Display enum value without the enum class name
+                        );
+                      },
+                    ).toList(),
                   ),
                   // Radio buttons for selecting add or remove action
                   ListTile(
@@ -81,11 +116,15 @@ class _EditCurrentAmountPageState extends State<EditCurrentAmountPage> {
                 // Call the appropriate method based on the selected action
                 if (_amount != null) {
                   if (selectedAction == 'add') {
-                    UserCurrentAccount()
-                        .addToCurrentUserAmount(_amount!, getCurrentDate());
+                    UserCurrentAccount().addToCurrentUserAmount(
+                        _amount!,
+                        getCurrentDate(),
+                        selectedCategory.toString().split('.').last);
                   } else if (selectedAction == 'remove') {
                     UserCurrentAccount().removeFromCurrentUserAmount(
-                        _amount!, getCurrentDate());
+                        _amount!,
+                        getCurrentDate(),
+                        selectedCategory.toString().split('.').last);
                   }
                   Navigator.of(context).pop();
                 }

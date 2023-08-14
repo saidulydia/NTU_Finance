@@ -28,7 +28,8 @@ class UserCurrentAccount {
   }
 
 // Method to add the new amount and transaction details
-  Future<void> addToCurrentUserAmount(double amount, String dateString) async {
+  Future<void> addToCurrentUserAmount(
+      double amount, String dateString, String budgetCategory) async {
     try {
       // Get the current user's ID
       String currentUserId = FirebaseAuth.instance.currentUser!.uid;
@@ -65,6 +66,7 @@ class UserCurrentAccount {
         'amount': amount,
         'dateString': dateString,
         'isAdding': true,
+        'budgetCategory': budgetCategory,
       });
     } catch (e) {
       // Handle errors here if necessary
@@ -74,7 +76,7 @@ class UserCurrentAccount {
 
 // Method to add the new amount and transaction details
   Future<void> removeFromCurrentUserAmount(
-      double amount, String dateString) async {
+      double amount, String dateString, String budgetCategory) async {
     try {
       // Get the current user's ID
       String currentUserId = FirebaseAuth.instance.currentUser!.uid;
@@ -110,7 +112,8 @@ class UserCurrentAccount {
       await accountTransactionsCollection.add({
         'amount': amount,
         'dateString': dateString,
-        'isAdding': true,
+        'isAdding': false,
+        'budgetCategory': budgetCategory,
       });
     } catch (e) {
       // Handle errors here if necessary

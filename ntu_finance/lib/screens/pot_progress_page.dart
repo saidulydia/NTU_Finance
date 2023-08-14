@@ -1,6 +1,7 @@
 import 'package:ntu_finance/firebase/potProgress.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:ntu_finance/firebase/userBalance.dart';
 
 class PotProgressPage extends StatefulWidget {
   final DocumentSnapshot<Object?> document;
@@ -45,7 +46,6 @@ class _PotProgressPageState extends State<PotProgressPage> {
     await showDialog(
       context: context,
       builder: (BuildContext context) {
-        // Declare a variable to store the selected action (add or remove)
         String selectedAction = 'add';
 
         return AlertDialog(
@@ -55,7 +55,6 @@ class _PotProgressPageState extends State<PotProgressPage> {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Text field for entering the amount
                   TextField(
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
@@ -64,7 +63,6 @@ class _PotProgressPageState extends State<PotProgressPage> {
                       });
                     },
                   ),
-                  // Radio buttons for selecting add or remove action
                   ListTile(
                     title: const Text('Add'),
                     leading: Radio(
@@ -103,7 +101,6 @@ class _PotProgressPageState extends State<PotProgressPage> {
             ElevatedButton(
               child: const Text('Submit'),
               onPressed: () {
-                // Call the appropriate method based on the selected action
                 if (_amount != null) {
                   if (selectedAction == 'add') {
                     PotProgress().addDateAmountEntry(
@@ -112,6 +109,8 @@ class _PotProgressPageState extends State<PotProgressPage> {
                       _amount!,
                       true,
                     );
+                    UserCurrentAccount().removeFromCurrentUserAmount(
+                        _amount!, getCurrentDate(), "Pot");
                   } else if (selectedAction == 'remove') {
                     PotProgress().removeDateAmountEntry(
                       widget.document['potName'],
@@ -119,6 +118,8 @@ class _PotProgressPageState extends State<PotProgressPage> {
                       _amount!,
                       false,
                     );
+                    UserCurrentAccount().addToCurrentUserAmount(
+                        _amount!, getCurrentDate(), "Pot");
                   }
                   Navigator.of(context).pop();
                 }
