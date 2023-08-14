@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ntu_finance/screens/budget_chart_page.dart';
 import 'package:ntu_finance/screens/user_profile_page.dart';
 import 'package:ntu_finance/top_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -104,7 +105,13 @@ class _HomePageState extends State<HomePage> {
                               icon: Icons.trending_up,
                               text: "Budget Tracking",
                               color: const Color(0xFF008080),
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => BudgetChartPage(),
+                                  ),
+                                );
+                              },
                             ),
                           ),
                           Expanded(
