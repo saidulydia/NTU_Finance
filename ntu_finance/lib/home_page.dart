@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ntu_finance/screens/budget_chart_page.dart';
 import 'package:ntu_finance/screens/discounts_page.dart';
 import 'package:ntu_finance/screens/manage_finance.dart';
+import 'package:ntu_finance/screens/reminders_page.dart';
 import 'package:ntu_finance/screens/user_profile_page.dart';
 import 'package:ntu_finance/top_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -172,7 +173,13 @@ class _HomePageState extends State<HomePage> {
                               icon: Icons.notification_important,
                               text: "Reminders",
                               color: const Color(0xFFFF7F50),
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => ReminderPage(),
+                                  ),
+                                );
+                              },
                             ),
                           ),
                           Expanded(
