@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:fl_chart/fl_chart.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -72,22 +72,43 @@ class BudgetChartPage extends StatelessWidget {
 
           final data = snapshot.data!;
 
-          var series = [
-            charts.Series(
-              id: 'Budget',
-              data: data,
-              domainFn: (BudgetCategoryData budget, _) => budget.category,
-              measureFn: (BudgetCategoryData budget, _) => budget.amount,
-              labelAccessorFn: (BudgetCategoryData budget, _) =>
-                  '${budget.category}: ${budget.amount.toStringAsFixed(2)}',
-            ),
-          ];
-
           return Column(
             children: [
               SizedBox(
                 height: 300,
-                child: charts.PieChart(series, animate: true),
+                child: PieChart(
+                  PieChartData(
+                    sections: data.map((budget) {
+                      return PieChartSectionData(
+                        value: budget.amount,
+                        title: '${budget.category}',
+                        titleStyle: TextStyle(fontSize: 14),
+                        // badgeWidget: Column(
+                        //   mainAxisSize: MainAxisSize.min,
+                        //   children: [
+                        //     Text(
+                        //       '${budget.amount.toStringAsFixed(2)}',
+                        //       style: TextStyle(
+                        //         fontSize: 16,
+                        //         fontWeight: FontWeight.bold,
+                        //         color: const Color(0xff000000),
+                        //       ),
+                        //     ),
+                        //     Text(
+                        //       'Amount',
+                        //       style: TextStyle(
+                        //         fontSize: 12,
+                        //         color: const Color(0xff878787),
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                      );
+                    }).toList(),
+                    sectionsSpace: 4,
+                    centerSpaceRadius: 50,
+                  ),
+                ),
               ),
               Expanded(
                 child: ListView.builder(

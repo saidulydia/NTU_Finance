@@ -16,7 +16,9 @@ dependencies:
   hive_flutter: ^1.1.0
   http: ^0.13.4
   intl: ^0.17.0
-  charts_flutter: 
+
+  graphic: ^2.2.0
+  fl_chart: ^0.63.0
 
 
 dev_dependencies:
