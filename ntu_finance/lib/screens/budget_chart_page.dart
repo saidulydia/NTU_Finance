@@ -40,13 +40,17 @@ class BudgetChartPage extends StatelessWidget {
 
     Map<String, double> categorySumMap = {};
 
-    data.docs.forEach((doc) {
-      final category = doc['budgetCategory'] as String;
-      final amount = doc['amount'] as double;
+    for (var doc in data.docs) {
+      final isAdding = doc['isAdding'] as bool;
 
-      categorySumMap.update(category, (value) => value + amount,
-          ifAbsent: () => amount);
-    });
+      if (isAdding == false) {
+        final category = doc['budgetCategory'] as String;
+        final amount = doc['amount'] as double;
+
+        categorySumMap.update(category, (value) => value + amount,
+            ifAbsent: () => amount);
+      }
+    }
 
     return categorySumMap.entries
         .map((entry) => BudgetCategoryData(entry.key, entry.value))
@@ -81,8 +85,8 @@ class BudgetChartPage extends StatelessWidget {
                     sections: data.map((budget) {
                       return PieChartSectionData(
                         value: budget.amount,
-                        title: '${budget.category}',
-                        titleStyle: TextStyle(fontSize: 14),
+                        title: budget.category,
+                        titleStyle: const TextStyle(fontSize: 14),
                         // badgeWidget: Column(
                         //   mainAxisSize: MainAxisSize.min,
                         //   children: [
