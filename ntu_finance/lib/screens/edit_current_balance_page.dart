@@ -237,6 +237,8 @@ class _EditCurrentAmountPageState extends State<EditCurrentAmountPage> {
                       color: isAdding ? Colors.green : Colors.red,
                     ),
                     title: Text('Amount: ${transactionData['amount'] ?? ''}'),
+                    subtitle: Text(
+                        'Category: ${transactionData['budgetCategory'] ?? ''}'),
                   );
                 }).toList(),
               );
