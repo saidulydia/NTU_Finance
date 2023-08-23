@@ -39,14 +39,14 @@ class _HomePageState extends State<HomePage> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
-            appBar: AppBar(title: const Text('NTU Expense')),
+            appBar: AppBar(title: const Text('My Finance')),
             body: Center(child: CircularProgressIndicator()),
           );
         }
 
         if (snapshot.hasError) {
           return Scaffold(
-            appBar: AppBar(title: const Text('NTU Expense')),
+            appBar: AppBar(title: const Text('My Finance')),
             body: Center(child: Text('Error: ${snapshot.error}')),
           );
         }
@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text('NTU Expense'),
+            title: Text('My Finance'),
             actions: <Widget>[
               IconButton(
                 icon: const Icon(Icons.person_2_rounded),
