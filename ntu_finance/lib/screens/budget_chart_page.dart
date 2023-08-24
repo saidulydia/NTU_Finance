@@ -57,6 +57,26 @@ class BudgetChartPage extends StatelessWidget {
         .toList();
   }
 
+  List<Color> generateSectionColors(int count) {
+    List<Color> colors = [
+      Colors.blue,
+      Colors.green,
+      Colors.orange,
+      Colors.red,
+      Colors.purple,
+      Colors.teal,
+      Colors.pink,
+      Colors.yellow,
+    ];
+
+    // Repeat the colors if there are more sections than available colors
+    while (colors.length < count) {
+      colors.addAll(colors);
+    }
+
+    return colors.sublist(0, count);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,6 +95,7 @@ class BudgetChartPage extends StatelessWidget {
           }
 
           final data = snapshot.data!;
+          List<Color> sectionColors = generateSectionColors(data.length);
 
           return Column(
             children: [
@@ -82,31 +103,14 @@ class BudgetChartPage extends StatelessWidget {
                 height: 300,
                 child: PieChart(
                   PieChartData(
-                    sections: data.map((budget) {
+                    sections: data.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final budget = entry.value;
                       return PieChartSectionData(
                         value: budget.amount,
                         title: budget.category,
                         titleStyle: const TextStyle(fontSize: 14),
-                        // badgeWidget: Column(
-                        //   mainAxisSize: MainAxisSize.min,
-                        //   children: [
-                        //     Text(
-                        //       '${budget.amount.toStringAsFixed(2)}',
-                        //       style: TextStyle(
-                        //         fontSize: 16,
-                        //         fontWeight: FontWeight.bold,
-                        //         color: const Color(0xff000000),
-                        //       ),
-                        //     ),
-                        //     Text(
-                        //       'Amount',
-                        //       style: TextStyle(
-                        //         fontSize: 12,
-                        //         color: const Color(0xff878787),
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
+                        color: sectionColors[index],
                       );
                     }).toList(),
                     sectionsSpace: 4,
