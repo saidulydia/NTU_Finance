@@ -237,8 +237,14 @@ class _EditCurrentAmountPageState extends State<EditCurrentAmountPage> {
                       color: isAdding ? Colors.green : Colors.red,
                     ),
                     title: Text('Amount: ${transactionData['amount'] ?? ''}'),
-                    subtitle: Text(
-                        'Category: ${transactionData['budgetCategory'] ?? ''}'),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Date: ${transactionData['dateString'] ?? ''}'),
+                        Text(
+                            'Category: ${transactionData['budgetCategory']?.toUpperCase() ?? ''}'),
+                      ],
+                    ),
                   );
                 }).toList(),
               );
